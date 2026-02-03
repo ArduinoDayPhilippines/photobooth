@@ -317,10 +317,13 @@ function CameraCapture({
                         title={prop.name}
                       >
                         {prop.category === 'sunglasses' && '🕶️'}
-                        {prop.category === 'hats' && '🧢'}
-                        {prop.category === 'components' && prop.id.includes('led') && '💡'}
+                        {prop.category === 'hats' && prop.id === 'robot-helmet' && '🤖'}
+                        {prop.category === 'hats' && prop.id !== 'robot-helmet' && '🧢'}
                         {prop.category === 'components' && prop.id.includes('resistor') && '🔌'}
-                        {prop.category === 'effects' && '✨'}
+                        {prop.category === 'components' && prop.id.includes('servo') && '⚙️'}
+                        {prop.category === 'effects' && prop.id.includes('binary') && '🔢'}
+                        {prop.category === 'effects' && prop.id.includes('cloud') && '☁️'}
+                        {prop.category === 'effects' && prop.id.includes('debug') && '✨'}
                       </button>
                     ))}
                   </div>

@@ -18,7 +18,7 @@ export function drawArduinoCap(context: DrawContext) {
     ctx.translate(0, -textBlockHeight * 0.8);
 
     // Draw Settings
-    const textScale = width * 0.003; // Dynamic scaling based on face width
+    const textScale = width * 0.003; // Original scale for proper visibility
 
     // Draw "ARDUINO"
     ctx.save();

@@ -2,9 +2,11 @@ import { ARProp } from '@/lib/ar/types';
 import { drawArduinoShadesTeal } from './sunglasses/arduinoShadesTeal';
 import { drawArduinoCap } from './hats/arduinoCap';
 import { drawRobotHelmet } from './hats/robotHelmet';
-import { drawLED } from './components/led';
 import { drawResistor } from './components/resistor';
+import { drawServoEars } from './components/servoEars';
 import { drawDebugLandmarks } from './debug/faceLandmarks';
+import { drawBinaryRain } from './effects/binaryRain';
+import { drawCloudData } from './effects/cloudData';
 
 /**
  * Registry of all available AR props
@@ -52,18 +54,6 @@ export const AR_PROPS: ARProp[] = [
     },
 
     // Electronic Components
-    {
-        id: 'led-red',
-        name: 'Glowing LED',
-        category: 'components',
-        draw: drawLED,
-        defaultColors: {
-            primary: '#FF0000',   // Red
-            secondary: '#FF6B35', // Orange glow
-        },
-        anchorPoints: [10], // Forehead center
-        defaultScale: 0.5, // Standard size
-    },
 
     {
         id: 'resistor-rainbow',
@@ -76,6 +66,46 @@ export const AR_PROPS: ARProp[] = [
         },
         anchorPoints: [1], // Nose tip
         defaultScale: 0.5, // Standard size
+    },
+
+    {
+        id: 'servo-ears',
+        name: 'Servo Motor Ears',
+        category: 'components',
+        draw: drawServoEars,
+        defaultColors: {
+            primary: '#00CED1',   // Teal accent
+            secondary: '#FF6B35', // Orange tip
+        },
+        anchorPoints: [10, 338, 109], // Head position
+        defaultScale: 1.0,
+    },
+
+    // Effects
+    {
+        id: 'binary-rain',
+        name: 'Binary Rain',
+        category: 'effects',
+        draw: drawBinaryRain,
+        defaultColors: {
+            primary: '#00FF00',   // Matrix green
+            secondary: '#003300', // Dark green
+        },
+        anchorPoints: [10], // Around head
+        defaultScale: 1.0,
+    },
+
+    {
+        id: 'cloud-data',
+        name: 'Cloud Data',
+        category: 'effects',
+        draw: drawCloudData,
+        defaultColors: {
+            primary: '#00CED1',   // Teal
+            secondary: '#FFFFFF', // White cloud
+        },
+        anchorPoints: [10], // Above head
+        defaultScale: 1.0,
     },
 
     // Debug

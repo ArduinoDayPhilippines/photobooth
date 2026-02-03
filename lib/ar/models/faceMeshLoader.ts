@@ -1,47 +1,27 @@
 "use client";
 
 /**
- * Real-time MediaPipe FaceMesh detection using TensorFlow
+ * MediaPipe Face Landmarker using direct MediaPipe SDK
  * Provides all 468 face landmarks for accurate AR prop positioning
  * 
- * Uses dynamic imports to avoid Turbopack build errors
+ * Uses direct MediaPipe SDK (zero dependencies) instead of TensorFlow wrapper
  */
 
-type FaceLandmarksDetection = typeof import('@tensorflow-models/face-landmarks-detection');
-type FaceLandmarksDetector = import('@tensorflow-models/face-landmarks-detection').FaceLandmarksDetector;
+import { FaceLandmarker, FilesetResolver, FaceLandmarkerResult } from '@mediapipe/tasks-vision';
 
-let detector: FaceLandmarksDetector | null = null;
+type FaceLandmarkerType = FaceLandmarker;
+
+let faceLandmarker: FaceLandmarkerType | null = null;
 let isLoading = false;
-let faceLandmarksDetection: FaceLandmarksDetection | null = null;
+let wasmFileset: any = null;
 
 /**
- * Dynamically load the face-landmarks-detection library
- * This avoids Turbopack trying to resolve the MediaPipe import at build time
+ * Load the MediaPipe Face Landmarker model
+ * Uses direct MediaPipe SDK for real-time face tracking
  */
-async function loadLibrary(): Promise<FaceLandmarksDetection> {
-    if (faceLandmarksDetection) {
-        return faceLandmarksDetection;
-    }
-
-    console.log('📦 Dynamically loading TensorFlow.js libraries...');
-
-    // Dynamically import TensorFlow.js dependencies
-    await import('@tensorflow/tfjs-core');
-    await import('@tensorflow/tfjs-backend-webgl');
-
-    // Dynamically import face-landmarks-detection
-    faceLandmarksDetection = await import('@tensorflow-models/face-landmarks-detection');
-
-    return faceLandmarksDetection;
-}
-
-/**
- * Load the MediaPipe FaceMesh model
- * Uses TensorFlow's face-landmarks-detection for real-time tracking
- */
-export async function loadFaceMeshModel(): Promise<FaceLandmarksDetector> {
-    if (detector) {
-        return detector;
+export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
+    if (faceLandmarker) {
+        return faceLandmarker;
     }
 
     if (isLoading) {
@@ -49,37 +29,45 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarksDetector> {
         while (isLoading) {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
-        if (detector) return detector;
+        if (faceLandmarker) return faceLandmarker;
     }
 
     isLoading = true;
 
     try {
-        console.log('🔄 Loading MediaPipe FaceMesh model (mediapipe runtime)...');
+        console.log('🔄 Loading MediaPipe Face Landmarker model...');
 
-        // Load the library dynamically
-        const lib = await loadLibrary();
+        // Load the MediaPipe Vision tasks WASM files
+        if (!wasmFileset) {
+            console.log('📦 Loading MediaPipe WASM files from CDN...');
+            wasmFileset = await FilesetResolver.forVisionTasks(
+                'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+            );
+        }
 
-        // Create detector with MediaPipe runtime
-        // The import issue is now patched in node_modules using CJS interop fix
-        detector = await lib.createDetector(
-            lib.SupportedModels.MediaPipeFaceMesh,
-            {
-                runtime: 'mediapipe',
-                refineLandmarks: true,
-                maxFaces: 1,
-                solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
-            }
-        );
+        // Create the Face Landmarker
+        faceLandmarker = await FaceLandmarker.createFromOptions(wasmFileset, {
+            baseOptions: {
+                modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+                delegate: 'GPU'
+            },
+            runningMode: 'VIDEO',
+            numFaces: 1,
+            minFaceDetectionConfidence: 0.5,
+            minFacePresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+            outputFaceBlendshapes: false,
+            outputFacialTransformationMatrixes: false,
+        });
 
-        console.log('✅ MediaPipe FaceMesh model loaded successfully!');
+        console.log('✅ MediaPipe Face Landmarker loaded successfully!');
         console.log('📍 Detecting 468 face landmarks in real-time');
 
         isLoading = false;
-        return detector;
+        return faceLandmarker;
     } catch (error) {
         isLoading = false;
-        console.error('❌ Error loading MediaPipe FaceMesh:', error);
+        console.error('❌ Error loading MediaPipe Face Landmarker:', error);
         throw error;
     }
 }
@@ -88,16 +76,21 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarksDetector> {
  * Dispose of the model to free memory
  */
 export async function disposeFaceMeshModel() {
-    if (detector) {
-        await detector.dispose();
-        detector = null;
-        console.log('🗑️ MediaPipe FaceMesh detector disposed');
+    if (faceLandmarker) {
+        faceLandmarker.close();
+        faceLandmarker = null;
+        console.log('🗑️ MediaPipe Face Landmarker disposed');
     }
 }
 
 /**
- * Get the current detector instance
+ * Get the current face landmarker instance
  */
 export function getFaceMeshModel() {
-    return detector;
+    return faceLandmarker;
 }
+
+/**
+ * Export the result type for use in other files
+ */
+export type { FaceLandmarkerResult };

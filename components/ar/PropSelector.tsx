@@ -76,9 +76,13 @@ export default function PropSelector({ onSelectProp, selectedProp }: PropSelecto
                         {/* Prop preview (simplified icon) */}
                         <div className="text-2xl">
                             {prop.category === 'sunglasses' && '🕶️'}
-                            {prop.category === 'hats' && (prop.id === 'robot-helmet' ? '🤖' : '🧢')}
-                            {prop.category === 'components' && prop.id.includes('led') && '💡'}
+                            {prop.category === 'hats' && prop.id.includes('robot-helmet') && '🤖'}
+                            {prop.category === 'hats' && prop.id.includes('arduino-cap') && '🧢'}
                             {prop.category === 'components' && prop.id.includes('resistor') && '🔌'}
+                            {prop.category === 'components' && prop.id.includes('servo') && '⚙️'}
+                            {prop.category === 'effects' && prop.id.includes('binary') && '🔢'}
+                            {prop.category === 'effects' && prop.id.includes('cloud') && '☁️'}
+                            {prop.category === 'effects' && prop.id.includes('debug') && '✨'}
                         </div>
                         <span className="text-xs text-gray-300 text-center leading-tight">
                             {prop.name}
