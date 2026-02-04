@@ -108,13 +108,20 @@ export default function Sidebar({
 
             {stations.map((st, index) => {
               const isActive = st.id === activeStationId;
-
-              // Logic: If current index is less than active index, it's completed (Teal).
-              // If it matches, it's active (Orange).
-              // Otherwise, it's future (Gray).
-              let statusColor = COLORS.FUTURE;
-              if (index < activeIndex) statusColor = COLORS.COMPLETED;
-              if (isActive) statusColor = COLORS.ACTIVE;
+              
+              // Determine status color based on palette or default colors
+              let statusColor: string;
+              if (indicatorPalette) {
+                // Use provided palette: index maps to palette array
+                statusColor = indicatorPalette[index] || COLORS.FUTURE;
+              } else {
+                // Default logic: If current index is less than active index, it's completed (Green).
+                // If it matches, it's active (Red).
+                // Otherwise, it's future (Yellow).
+                statusColor = COLORS.FUTURE;
+                if (index < activeIndex) statusColor = COLORS.COMPLETED;
+                if (isActive) statusColor = COLORS.ACTIVE;
+              }
 
               // Active dot is slightly larger and shifted left, others are standard
               const indicatorStyle: React.CSSProperties = {
