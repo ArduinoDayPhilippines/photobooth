@@ -1,8 +1,6 @@
 import { DrawContext } from '@/lib/ar/types';
 
-/**
- * Draw a Retro Orange Robot Head based on user reference
- */
+
 export function drawRobotHelmet(context: DrawContext) {
     const { ctx, x, y, width, height, rotation } = context;
 
@@ -10,21 +8,20 @@ export function drawRobotHelmet(context: DrawContext) {
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
-    // Position adjustments
-    // Shift up to sit on the forehead (avoid covering eyes)
+    
     ctx.translate(0, -height * 0.5);
 
-    const helmetScale = 0.8; // Internal scale factor
+    const helmetScale = 0.8; 
     const w = width * helmetScale;
-    const h = height * 1.5 * helmetScale; // Slightly taller than wide
+    const h = height * 1.5 * helmetScale; 
 
-    // Colors
+    
     const colors = {
-        primary: '#D95E32', // Burnt Orange
-        primaryLight: '#E57A50', // Lighter Orange for highlight
-        visorBg: '#2A2A2A', // Dark Grey/Black
-        faceLight: '#66D9EF', // Cyan/Light Blue
-        rim: '#B84520', // Darker Orange for outlines/shadows
+        primary: '#D95E32', 
+        primaryLight: '#E57A50', 
+        visorBg: '#2A2A2A', 
+        faceLight: '#66D9EF', 
+        rim: '#B84520', 
     };
 
     // --- Main Helmet Shape ---

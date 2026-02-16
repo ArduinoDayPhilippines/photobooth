@@ -1,31 +1,29 @@
 import { DrawContext } from '@/lib/ar/types';
 
-/**
- * Draw Cloud Data effect - LARGER with GLOWING outline
- */
+
 export function drawCloudData(context: DrawContext) {
     const { ctx, x, y, width, height, colors } = context;
     const time = Date.now();
 
     ctx.save();
     ctx.translate(x, y);
-    ctx.translate(0, -height * 0.9); // Position higher above head
+    ctx.translate(0, -height * 0.9); 
 
-    // Cloud shape - 3X BIGGER
+    
     const cloudWidth = width * 1.5;
     const cloudHeight = height * 0.7;
 
-    // Animated glow intensity
+    
     const glowPulse = (Math.sin(time / 400) + 1) / 2;
     const glowIntensity = 20 + glowPulse * 15;
 
-    // Draw GLOWING OUTLINE first (behind the cloud)
+    
     ctx.strokeStyle = colors.primary || '#00CED1';
     ctx.lineWidth = 4;
     ctx.shadowColor = colors.primary || '#00CED1';
     ctx.shadowBlur = glowIntensity;
 
-    // Draw cloud outline
+    
     ctx.beginPath();
     ctx.arc(-cloudWidth * 0.25, 0, cloudHeight * 0.45, 0, Math.PI * 2);
     ctx.stroke();
@@ -42,7 +40,7 @@ export function drawCloudData(context: DrawContext) {
     ctx.arc(cloudWidth * 0.4, cloudHeight * 0.1, cloudHeight * 0.32, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Draw cloud fill (white with slight transparency)
+    
     ctx.shadowBlur = 0;
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
 
@@ -54,7 +52,7 @@ export function drawCloudData(context: DrawContext) {
     ctx.arc(cloudWidth * 0.4, cloudHeight * 0.1, cloudHeight * 0.32, 0, Math.PI * 2);
     ctx.fill();
 
-    // Data packets (arrows going up to cloud)
+    
     const packetCount = 5;
 
     for (let i = 0; i < packetCount; i++) {

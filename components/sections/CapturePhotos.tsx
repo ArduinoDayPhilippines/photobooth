@@ -126,16 +126,15 @@ function CameraCapture({
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      // Reduce resolution for storage efficiency
-      const scale = 0.8;
-      canvas.width = video.videoWidth * scale;
-      canvas.height = video.videoHeight * scale;
+      // Use full video resolution to match AR canvas coordinates
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        // Flip horizontally
+        // Flip horizontally to match the mirrored live preview
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(video, 0, 0);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Draw AR props if enabled
         if (
@@ -145,17 +144,13 @@ function CameraCapture({
           arCanvasRef.current
         ) {
           const arCanvas = arCanvasRef.current;
-          const arCtx = arCanvas.getContext("2d");
-          if (arCtx) {
-            // Reset transform for AR overlay
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-            // Draw AR canvas content
-            ctx.drawImage(arCanvas, 0, 0);
-          }
+          // Reset transform for AR overlay
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          // Draw AR canvas scaled to match capture canvas dimensions
+          ctx.drawImage(arCanvas, 0, 0, canvas.width, canvas.height);
         }
 
-        const imageData = canvas.toDataURL("image/jpeg", 0.9);
+        const imageData = canvas.toDataURL("image/jpeg", 0.85);
         onCapture(imageData);
       }
     }
@@ -327,11 +322,10 @@ function CameraCapture({
                         setAREnabled(false); // Explicitly disable AR when None is selected
                         setShowARMenu(false); // Optional: auto-close
                       }}
-                      className={`aspect-square rounded border-2 transition flex items-center justify-center text-lg ${
-                        !selectedProp
+                      className={`aspect-square rounded border-2 transition flex items-center justify-center text-lg ${!selectedProp
                           ? "border-[#FF6B35] bg-[rgba(255,107,53,0.1)]"
                           : "border-[rgba(0,206,209,0.3)] hover:border-[#00CED1]"
-                      }`}
+                        }`}
                       title="No Effect"
                     >
                       🚫
@@ -346,11 +340,10 @@ function CameraCapture({
                           setAREnabled(true); // Auto-enable AR
                           // setShowARMenu(false); // Keep open to let user try different ones
                         }}
-                        className={`aspect-square rounded border-2 transition flex items-center justify-center text-lg ${
-                          selectedProp?.id === prop.id
+                        className={`aspect-square rounded border-2 transition flex items-center justify-center text-lg ${selectedProp?.id === prop.id
                             ? "border-[#FF6B35] bg-[rgba(255,107,53,0.1)]"
                             : "border-[rgba(0,206,209,0.3)] hover:border-[#00CED1]"
-                        }`}
+                          }`}
                         title={prop.name}
                       >
                         {prop.category === "sunglasses" && "🕶️"}
@@ -414,11 +407,10 @@ function CameraCapture({
           <button
             onClick={() => setShowARMenu(!showARMenu)}
             disabled={!isStreaming}
-            className={`px-6 py-3 rounded-full font-medium transition flex items-center gap-2 ${
-              showARMenu || (isAREnabled && selectedProp)
+            className={`px-6 py-3 rounded-full font-medium transition flex items-center gap-2 ${showARMenu || (isAREnabled && selectedProp)
                 ? "bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.5)]"
                 : "bg-[rgba(255,255,255,0.1)] text-white hover:bg-[rgba(255,255,255,0.2)]"
-            }`}
+              }`}
           >
             <svg
               className="w-5 h-5"

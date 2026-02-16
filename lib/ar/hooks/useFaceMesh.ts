@@ -5,13 +5,12 @@ import { FaceLandmarker } from '@mediapipe/tasks-vision';
 import { loadFaceMeshModel, disposeFaceMeshModel, FaceLandmarkerResult } from '../models/faceMeshLoader';
 import { FacePrediction } from '../types';
 
-// Suppress harmless TensorFlow Lite INFO messages from MediaPipe
 if (typeof window !== 'undefined') {
     const originalConsoleError = console.error;
     console.error = (...args: unknown[]) => {
         const message = args[0];
         if (typeof message === 'string' && message.includes('TensorFlow Lite XNNPACK')) {
-            return; // Suppress this harmless info message
+            return; 
         }
         originalConsoleError.apply(console, args);
     };
@@ -70,14 +69,14 @@ export function useFaceMesh(videoElement: HTMLVideoElement | null, isEnabled: bo
             }
             lastVideoTimeRef.current = currentTime;
 
-            // Use MediaPipe's detectForVideo API
+            
             const timestamp = performance.now();
             const results: FaceLandmarkerResult = detector.detectForVideo(videoElement, timestamp);
 
-            // Convert MediaPipe results to FacePrediction format
+            
             if (results.faceLandmarks && results.faceLandmarks.length > 0) {
                 const predictions: FacePrediction[] = results.faceLandmarks.map((landmarks, index) => {
-                    // Convert normalized coordinates to keypoints format
+                    
                     const keypoints = landmarks.map((landmark, idx) => ({
                         x: landmark.x * videoElement.videoWidth,
                         y: landmark.y * videoElement.videoHeight,
@@ -85,7 +84,7 @@ export function useFaceMesh(videoElement: HTMLVideoElement | null, isEnabled: bo
                         name: `landmark_${idx}`
                     }));
 
-                    // Calculate bounding box from landmarks
+                    
                     const xs = keypoints.map(kp => kp.x);
                     const ys = keypoints.map(kp => kp.y);
                     const minX = Math.min(...xs);
@@ -103,7 +102,7 @@ export function useFaceMesh(videoElement: HTMLVideoElement | null, isEnabled: bo
                             width: maxX - minX,
                             height: maxY - minY,
                         },
-                        score: 0.99, // MediaPipe doesn't provide a single confidence score
+                        score: 0.99, 
                     };
                 });
 
@@ -138,8 +137,7 @@ export function useFaceMesh(videoElement: HTMLVideoElement | null, isEnabled: bo
             if (animationFrameRef.current) {
                 cancelAnimationFrame(animationFrameRef.current);
             }
-            // Note: We don't dispose the detector here as it's a singleton
-            // It will be reused if the component remounts
+            
         };
     }, []);
 

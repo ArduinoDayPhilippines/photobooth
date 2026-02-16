@@ -1,8 +1,6 @@
 import { DrawContext } from '@/lib/ar/types';
 
-/**
- * Draw "Arduino Day" text as a hat prop
- */
+
 export function drawArduinoCap(context: DrawContext) {
     const { ctx, x, y, width, height, rotation, colors } = context;
 
@@ -10,10 +8,7 @@ export function drawArduinoCap(context: DrawContext) {
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
-    // Position adjustments
-    // Anchor 10 is top of forehead. 
-    // We want the text to sit ON TOP of this anchor.
-    // So we move UP (negative Y) by half the text block height + some padding.
+    
     const textBlockHeight = height * 0.8;
     ctx.translate(0, -textBlockHeight * 0.8);
 

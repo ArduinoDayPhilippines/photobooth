@@ -1,9 +1,7 @@
 import { DrawContext } from '@/lib/ar/types';
 import { roundRect } from '../utils/shapes';
 
-/**
- * Draw Arduino-themed teal sunglasses with circuit board pattern
- */
+
 export function drawArduinoShadesTeal(context: DrawContext) {
     const { ctx, x, y, width, height, rotation, colors } = context;
 
@@ -11,22 +9,20 @@ export function drawArduinoShadesTeal(context: DrawContext) {
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
-    // Frame dimensions - use width directly for better control via defaultScale
+    
     const frameWidth = width;
     const frameHeight = height;
-    const lensWidth = frameWidth * 0.42; // Slightly wider lenses
+    const lensWidth = frameWidth * 0.42; 
     const lensHeight = frameHeight * 0.8;
     const bridgeWidth = frameWidth * 0.16;
     const templeWidth = frameWidth * 0.2;
 
-    // Vertical offset - align bridge exactly with anchor point (nose bridge)
-    // Anchor point is average of eyes, so it's roughly the bridge center.
-    // We want the bridge of the glasses to be at y=0 relative to anchor.
+    
     const yOffset = 0;
 
-    // Draw left lens frame
-    ctx.fillStyle = colors.primary + '40'; // Teal with transparency
-    ctx.strokeStyle = colors.secondary; // Orange
+   
+    ctx.fillStyle = colors.primary + '40'; 
+    ctx.strokeStyle = colors.secondary; 
     ctx.lineWidth = 4;
 
     roundRect(ctx, -frameWidth / 2, yOffset - lensHeight / 2, lensWidth, lensHeight, 10);
@@ -46,26 +42,7 @@ export function drawArduinoShadesTeal(context: DrawContext) {
     ctx.lineWidth = 4;
     ctx.stroke();
 
-    // Temples (arms) removed per user request
-    /*
-    // Draw left temple
-    ctx.strokeStyle = colors.primary;
-    ctx.lineWidth = 5;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-frameWidth / 2, yOffset - lensHeight / 4);
-    ctx.lineTo(-frameWidth / 2 - templeWidth, yOffset - lensHeight / 4 + 10);
-    ctx.stroke();
-
-    // Draw right temple
-    ctx.beginPath();
-    ctx.moveTo(frameWidth / 2, yOffset - lensHeight / 4);
-    ctx.lineTo(frameWidth / 2 + templeWidth, yOffset - lensHeight / 4 + 10);
-    ctx.stroke();
-    */
-
-    // Circuit pattern on lenses
-    // Circuit pattern on lenses (centered on lens)
+   
     drawCircuitPattern(ctx, -frameWidth / 2 + lensWidth / 2, yOffset, lensWidth * 0.7, lensHeight * 0.5);
     drawCircuitPattern(ctx, frameWidth / 2 - lensWidth / 2, yOffset, lensWidth * 0.7, lensHeight * 0.5);
 

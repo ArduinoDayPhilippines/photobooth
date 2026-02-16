@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * MediaPipe Face Landmarker using direct MediaPipe SDK
- * Provides all 468 face landmarks for accurate AR prop positioning
- * 
- * Uses direct MediaPipe SDK (zero dependencies) instead of TensorFlow wrapper
- */
-
 import { FaceLandmarker, FilesetResolver, FaceLandmarkerResult } from '@mediapipe/tasks-vision';
 
 type FaceLandmarkerType = FaceLandmarker;
@@ -15,10 +8,7 @@ let faceLandmarker: FaceLandmarkerType | null = null;
 let isLoading = false;
 let wasmFileset: any = null;
 
-/**
- * Load the MediaPipe Face Landmarker model
- * Uses direct MediaPipe SDK for real-time face tracking
- */
+
 export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
     if (faceLandmarker) {
         return faceLandmarker;
@@ -35,11 +25,11 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
     isLoading = true;
 
     try {
-        console.log('🔄 Loading MediaPipe Face Landmarker model...');
+        console.log('Loading MediaPipe Face Landmarker model...');
 
         // Load the MediaPipe Vision tasks WASM files
         if (!wasmFileset) {
-            console.log('📦 Loading MediaPipe WASM files from CDN...');
+            console.log('Loading MediaPipe WASM files from CDN...');
             wasmFileset = await FilesetResolver.forVisionTasks(
                 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
             );
@@ -52,7 +42,7 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
                 delegate: 'GPU'
             },
             runningMode: 'VIDEO',
-            numFaces: 1,
+            numFaces: 8,
             minFaceDetectionConfidence: 0.5,
             minFacePresenceConfidence: 0.5,
             minTrackingConfidence: 0.5,
@@ -60,37 +50,31 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
             outputFacialTransformationMatrixes: false,
         });
 
-        console.log('✅ MediaPipe Face Landmarker loaded successfully!');
-        console.log('📍 Detecting 468 face landmarks in real-time');
+        console.log('MediaPipe Face Landmarker loaded successfully!');
+        console.log('Detecting 468 face landmarks in real-time');
 
         isLoading = false;
         return faceLandmarker;
     } catch (error) {
         isLoading = false;
-        console.error('❌ Error loading MediaPipe Face Landmarker:', error);
+        console.error('Error loading MediaPipe Face Landmarker:', error);
         throw error;
     }
 }
 
-/**
- * Dispose of the model to free memory
- */
+
 export async function disposeFaceMeshModel() {
     if (faceLandmarker) {
         faceLandmarker.close();
         faceLandmarker = null;
-        console.log('🗑️ MediaPipe Face Landmarker disposed');
+        console.log('MediaPipe Face Landmarker disposed');
     }
 }
 
-/**
- * Get the current face landmarker instance
- */
+
 export function getFaceMeshModel() {
     return faceLandmarker;
 }
 
-/**
- * Export the result type for use in other files
- */
+
 export type { FaceLandmarkerResult };
