@@ -11,17 +11,8 @@ import BokehBackground from "@/components/ui/BokehBackground";
 import ARCanvas from "@/components/ar/ARCanvas";
 import { useFaceMesh } from "@/lib/ar/hooks/useFaceMesh";
 import { useARState } from "@/lib/ar/hooks/useARState";
+import { getActiveStationConfig } from "@/lib/layoutMode";
 import { AR_PROPS } from "@/public/ar-props";
-
-const LAYOUT_CONFIGS: Record<
-  string,
-  { size: number; columns: number; title: string }
-> = {
-  "1": { size: 4, columns: 2, title: "SUBWAY 1" },
-  "2": { size: 6, columns: 3, title: "SUBWAY 2" },
-  "3": { size: 4, columns: 1, title: "ELEVATOR" },
-  "4": { size: 6, columns: 2, title: "TRANSIT" },
-};
 
 function StationBadge({ children }: { children: React.ReactNode }) {
   return (
@@ -506,8 +497,7 @@ function CapturePhotosContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentStationId = searchParams.get("station") || "1";
-  const activeConfig = LAYOUT_CONFIGS[currentStationId] || LAYOUT_CONFIGS["1"];
+  const activeConfig = getActiveStationConfig(searchParams.get("station"));
 
   const [showCamera, setShowCamera] = useState(false);
   const [photos, setPhotos] = useState<(string | null)[]>(() =>
