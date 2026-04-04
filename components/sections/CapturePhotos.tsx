@@ -135,7 +135,7 @@ function CameraCapture({
         // Flip horizontally
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(video, 0, 0);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Draw AR props if enabled
         if (
@@ -151,7 +151,7 @@ function CameraCapture({
             ctx.setTransform(1, 0, 0, 1, 0, 0);
 
             // Draw AR canvas content
-            ctx.drawImage(arCanvas, 0, 0);
+            ctx.drawImage(arCanvas, 0, 0, canvas.width, canvas.height);
           }
         }
 
