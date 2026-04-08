@@ -52,7 +52,7 @@ export async function loadFaceMeshModel(): Promise<FaceLandmarkerType> {
                 delegate: 'GPU'
             },
             runningMode: 'VIDEO',
-            numFaces: 1,
+            numFaces: 10,
             minFaceDetectionConfidence: 0.5,
             minFacePresenceConfidence: 0.5,
             minTrackingConfidence: 0.5,
